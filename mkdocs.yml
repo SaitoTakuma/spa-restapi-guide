@@ -1,0 +1,18 @@
+site_name: SPA + REST API構成の方式設計ガイド
+nav:
+  - index.md
+  - validation.md
+  - api-design.md
+  - fetch.md
+  - cors.md
+  - download.md
+  - upload.md
+  - xss.md
+  - csrf.md
+theme:
+  name: material
+  language: 'ja'
+  custom_dir: overrides
+markdown_extensions:
+  - admonition
+  - codehilite

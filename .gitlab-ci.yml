@@ -1,0 +1,13 @@
+image: 
+  name: squidfunk/mkdocs-material@sha256:c1e9396754016164fc360444cc6629e7dd7ad0423a9e76218abc521d7d800397
+  entrypoint: ["/bin/sh", "-c"]
+
+pages:
+  script:
+  - mkdocs build
+  - mv site public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master

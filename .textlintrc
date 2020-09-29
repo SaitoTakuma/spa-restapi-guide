@@ -1,0 +1,21 @@
+{
+  "filters": {
+     "comments": true
+  },
+  "rules": {
+    "preset-ja-technical-writing": {
+      "no-exclamation-question-mark": {
+        "allow": ["!!! Note"]
+      },
+      "max-kanji-continuous-len": {
+        "allow": ["暗号論的擬似乱数生成器"]
+      }
+    },
+    "spellcheck-tech-word": true,
+    "textlint-rule-preset-ja-spacing": true,
+    "prh": {
+      "rulePaths": ["./prh.yml"]
+    },
+    "period-in-list-item": true,
+  }
+}
