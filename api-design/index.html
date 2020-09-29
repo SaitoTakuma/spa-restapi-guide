@@ -1,0 +1,716 @@
+
+
+
+<!doctype html>
+<html lang="ja" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
+    
+    
+      
+        <title>REST API設計 - SPA + REST API構成の方式設計ガイド</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4dd2dd8d.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rest-api" class="md-skip">
+          コンテンツにスキップ
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="SPA + REST API構成の方式設計ガイド" class="md-header-nav__button md-logo" aria-label="SPA + REST API構成の方式設計ガイド">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            SPA + REST API構成の方式設計ガイド
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              REST API設計
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="検索" placeholder="検索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SPA + REST API構成の方式設計ガイド" class="md-nav__button md-logo" aria-label="SPA + REST API構成の方式設計ガイド">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    SPA + REST API構成の方式設計ガイド
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="はじめに" class="md-nav__link">
+      はじめに
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../validation/" title="バリデーション" class="md-nav__link">
+      バリデーション
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        REST API設計
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" title="REST API設計" class="md-nav__link md-nav__link--active">
+      REST API設計
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    パス
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http" class="md-nav__link">
+    HTTPメソッド
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http_1" class="md-nav__link">
+    HTTPステータスコード
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPステータスコード">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    データフォーマット
+  </a>
+  
+    <nav class="md-nav" aria-label="データフォーマット">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    エラー情報
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    バージョニング
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../fetch/" title="フロントエンド・バックエンド間通信" class="md-nav__link">
+      フロントエンド・バックエンド間通信
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../cors/" title="CORS（オリジン間リソース共有）" class="md-nav__link">
+      CORS（オリジン間リソース共有）
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../download/" title="ファイルダウンロード" class="md-nav__link">
+      ファイルダウンロード
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../upload/" title="ファイルアップロード" class="md-nav__link">
+      ファイルアップロード
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../xss/" title="XSS（クロスサイトスクリプティング）対策" class="md-nav__link">
+      XSS（クロスサイトスクリプティング）対策
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../csrf/" title="CSRF（クロスサイトリクエストフォージェリ）" class="md-nav__link">
+      CSRF（クロスサイトリクエストフォージェリ）
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目次">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目次
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    パス
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http" class="md-nav__link">
+    HTTPメソッド
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http_1" class="md-nav__link">
+    HTTPステータスコード
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPステータスコード">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    データフォーマット
+  </a>
+  
+    <nav class="md-nav" aria-label="データフォーマット">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    エラー情報
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    バージョニング
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    参考資料
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="rest-api">REST API設計</h1>
+<p>REST APIを設計するにあたってパスやHTTPメソッドなど、考えるべき事柄に対する指針を例示します。</p>
+<h2 id="_1">パス</h2>
+<p>RESTの定義に沿って、リソースを表すものとして使用します。</p>
+<p>どのようなリソースであるかを分かりやすくするため、基本的に名詞を使用します。</p>
+<div class="codehilite"><pre><span></span><code><span class="err">/api/channels</span>
+<span class="err">/api/messages</span>
+</code></pre></div>
+
+
+<p>リソースが集合である場合、その中に含まれる個々のリソースを表す場合には、集合のリソースを表すパスに続けて識別する値を含めたパスとします。</p>
+<div class="codehilite"><pre><span></span><code><span class="err">/api/messages/:id</span>
+</code></pre></div>
+
+
+<p>リソースが別のリソースの子リソースであることを表す場合には、親リソースを含めたパスとします。なお、実際の管理上は親子関係となるリソースであってもパスで子リソースであることを表す必要がなければ、親リソースは含めないパスとしてもよいでしょう。</p>
+<p>例えば<code>メッセージ</code>リソースには<code>チャンネル</code>リソースの子としての関係がある場合、次に示すAのように<code>チャンネル</code>リソースをパスの上位に含めてもBのように<code>チャンネル</code>リソースを含めなくても、どちらでもよいでしょう。</p>
+<ul>
+<li>A. <code>/api/channles/:name/messages/:id</code></li>
+<li>B. <code>/api/messages/:id</code></li>
+</ul>
+<p>リソースで表すのが困難な場合、次のように動詞を使用して操作を表すパスとすることもあります。ただし、基本的にはリソースで表すものとするため、安易には使用しないでください。</p>
+<div class="codehilite"><pre><span></span><code><span class="err">/api/signup</span>
+</code></pre></div>
+
+
+<h2 id="http">HTTPメソッド</h2>
+<p>RESTの定義に沿って、リソースに対する操作を表すものとして使用します。主な操作としては次のものを使用します。</p>
+<table>
+<thead>
+<tr>
+<th>メソッド名</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>リソースの取得</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>リソースの新規登録</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>既存リソースの更新</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>リソースの削除</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>リソースの一部変更</td>
+</tr>
+</tbody>
+</table>
+<p>パスがリソースではなく操作を表す場合、「操作する」ためのメソッドとして<code>POST</code>を使用します。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CORSを使用する場合はプリフライトリクエストで<code>OPTIONS</code>を使用しますが、ブラウザが自動的に発行するリクエストであるため、主な操作には含めていません。
+CORSについては<a href="../cors/">CORS（オリジン間リソース共有）</a>を参照してください。</p>
+</div>
+<h2 id="http_1">HTTPステータスコード</h2>
+<p>HTTPの仕様に沿って、HTTPステータスコードを使用します。</p>
+<p>主に次のものを使用します。</p>
+<table>
+<thead>
+<tr>
+<th>ステータスコード</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200 - 299</td>
+<td>成功</td>
+</tr>
+<tr>
+<td>400 - 499</td>
+<td>クライアントサイドに起因するエラー</td>
+</tr>
+<tr>
+<td>500 - 599</td>
+<td>サーバーサイドに起因するエラー</td>
+</tr>
+</tbody>
+</table>
+<p>なお、リクエストが成功した場合のステータスコードとしてはレスポンスボディがあれば<code>200</code>（OK）、なければ<code>204</code>（No Content）を使用します。
+<code>POST</code>等により新しいリソースが作成された場合には<code>201</code>（Created）および<code>Location</code>ヘッダの使用が考えられますが、フレームワークによっては<code>201</code>を返すのが煩雑なコードになる場合があります。フロントエンドでハンドリングするための情報として<code>200</code>で必要十分であれば<code>201</code>は使用しなくても良いでしょう。</p>
+<h3 id="_2">参考資料</h3>
+<p><a href="https://developer.mozilla.org/ja/docs/Web/HTTP/Status">HTTPレスポンスステータスコード - MDN</a></p>
+<h2 id="_3">データフォーマット</h2>
+<p>リクエストおよびレスポンスのデータフォーマットはJSONとします。ただし、ファイルアップロード用のデータ送信時にはマルチパートを使用します（<a href="../upload/">ファイルアップロード</a>を参照）。
+また、ファイルダウンロード用のデータ送信時には任意のフォーマットを使用します（<a href="../download/">ファイルダウンロード</a>を参照）。</p>
+<p>日時については文字列で扱うこととし、ISO 8601（拡張形式）に準じたフォーマットとします。</p>
+<h3 id="_4">参考資料</h3>
+<p><a href="https://ja.wikipedia.org/wiki/ISO_8601">ISO 8601 | Wikipedia</a></p>
+<h2 id="_5">エラー情報</h2>
+<p>ステータスコードでエラーの種類を判別できない場合はレスポンスボディにエラー情報を含めることを検討してください。</p>
+<p>成功時と同じように処理するため、エラー時のレスポンスボディもJSON形式とし、エラーコードやエラーメッセージを含めると良いでしょう。
+例を示します。</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;code&quot;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;xxxの値が不正です&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<h2 id="_6">バージョニング</h2>
+<p>REST APIを変更する際は、なるべく後方互換性を保つのが望ましいです。
+変更におけるいくつかのユースケースと後方互換の有無を例示します。</p>
+<table>
+<thead>
+<tr>
+<th>ユースケースの例</th>
+<th>後方互換の有無</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新しいAPIを追加する</td>
+<td>新規追加なので既存APIに影響はなく、後方互換あり</td>
+</tr>
+<tr>
+<td>既存のAPIに渡す値へ新しい項目を追加する</td>
+<td>デフォルト値を用意すれば後方互換性を保てる</td>
+</tr>
+<tr>
+<td>既存のAPIから返される値に項目を追加する</td>
+<td>既存の項目がなくなるわけではないので後方互換あり</td>
+</tr>
+<tr>
+<td>既存のAPIの振る舞いが変わる</td>
+<td>後方互換なし</td>
+</tr>
+<tr>
+<td>既存のAPIを廃止する</td>
+<td>後方互換なし</td>
+</tr>
+</tbody>
+</table>
+<p>後方互換性を崩す変更を伴う場合、一例としてパスによるバージョニングがあります。
+パスのルートにバージョン番号を含めて、各API毎ではなくAPI全体をバージョニングします。</p>
+<ul>
+<li>既存のAPIのルートパス - <code>/api/v1</code><br />
+  後方互換性を崩さない変更であれば、このルートパスを使い続ける</li>
+<li>後方互換性を崩す新しいAPIのルートパス - <code>/api/v2</code><br />
+  次に後方互換性を崩す変更が入るまでは、このルートパスを使う</li>
+</ul>
+<p>なお、REST APIの公開範囲が自分たちの管理下にあればクライアントアプリケーションの変更も管理できるため、REST API単体でのバージョニングは行わなくても良いでしょう。</p>
+<h2 id="_7">参考資料</h2>
+<p><a href="https://ja.wikipedia.org/wiki/Representational_State_Transfer">Representational State Transfer - Wikipedia</a></p>
+                
+              
+              
+                
+
+
+              
+			  <hr/>
+			  <p><small>※ このドキュメントは<a href="https://fintan.jp/?page_id=201">Fintan コンテンツ 使用許諾条項</a>の下に提供されています。</small></p>
+
+			  <p><small>※ このドキュメントに記載されている会社名、製品名は、各社の登録商標または商標です。</small></p>
+
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../validation/" title="バリデーション" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  前
+                </span>
+                バリデーション
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../fetch/" title="フロントエンド・バックエンド間通信" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  次
+                </span>
+                フロントエンド・バックエンド間通信
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.3636a4ec.min.js"></script>
+      <script src="../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u3078\u30b3\u30d4\u30fc", "clipboard.copied": "\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\u3000\u3001\u3002\uff0c\uff0e]+", "search.result.placeholder": "\u691c\u7d22\u30ad\u30fc\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044", "search.result.none": "\u4f55\u3082\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f", "search.result.one": "1\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f", "search.result.other": "#\u4ef6\u898b\u3064\u304b\u308a\u307e\u3057\u305f"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
